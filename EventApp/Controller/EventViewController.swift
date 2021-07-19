@@ -17,7 +17,7 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var eventModels = [EventModel]()
     
-    var saveEvent : [EventSaved] = []
+    var newSavePost = [EventSaved]()
 
     let searchVC = UISearchController(searchResultsController: nil)
 
@@ -50,23 +50,18 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
         tableView.reloadData()
-        print("cells reloaded")
-        
-        print(" This is the saved events that are saved \(saveEvent)")
-        getEvents()
-        
+
     }
     
     
-    func getEvents(){
+    func getEvents() {
         
         EventManager.shared.getEvents { [weak self] result in
             switch result {
             case .success(let performers):
-//                self?.eventModels = performers.compactMap({ EventModel(title: $0.name,
-//                                                                       subtitle: $0.type,
-//                                                                       imageURL: URL(string: $0.image )!)
+
                     self?.eventModels = performers.compactMap({ EventModel(title: $0.name, subtitle: $0.type,
                                                                            imageURL: URL(string: $0.image )!)
                 })
@@ -79,6 +74,49 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 print(error)
             }
         }
+        
+        db.collection("Post").addSnapshotListener { [self] snapshot, error in
+
+            self.newSavePost = []
+            
+            print("THIS IS THE NEW SAVED POST ARRAY THAT S")
+            if let e = error {
+                print("Error retrieving data \(e)")
+            } else {
+                
+                if let newDoc = snapshot?.documents {
+                    
+                    for doc in newDoc {
+                        
+                        let data = doc.data()
+                        if let descData = data["description"] as? String, let titleData = data["title"] as? String {
+                       
+                           let newPost = EventSaved(title: titleData, subtitle: descData)
+                       
+                            
+                            newSavePost.append(newPost)
+                            
+
+      
+                    print("this is the new array that was created \(newSavePost)")
+ 
+
+                                
+                            
+                            }
+      
+                        }
+   
+                    }
+                    
+        
+                }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+          }
+        
     }
     
     func createSearchBar() {
@@ -104,11 +142,23 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
       
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EventTableViewCell
         cell.configureCell(with: eventModels[indexPath.row])
-   
+
+       
+        for titles in newSavePost {
+            
+            if eventModels[indexPath.row].title == titles.title {
+                cell.likeLabel.text = "❤️"
+            } else {
+                print("Couldn't find a match!")
+            }
+        }
+        
+
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         
         return eventModels.count
     }
@@ -123,8 +173,6 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         selectedVC.eventLabel.text = event.title
         selectedVC.descLabel.text = event.subtitle
-       
-        
         
         if let data = event.imageData {
             selectedVC.image.image = UIImage(data: data)
@@ -156,9 +204,7 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         EventManager.shared.search(with: search){ [weak self] result in
             switch result {
             case .success(let performers):
-//                self?.eventModels = performers.compactMap({ EventModel(title: $0.name,
-//                                                                       subtitle: $0.type,
-//                                                                       imageURL: URL(string: $0.image )!)
+
             
                 self?.eventModels = performers.compactMap({ EventModel(title: $0.name, subtitle: $0.type,
                                                                        imageURL: URL(string: $0.image )!)

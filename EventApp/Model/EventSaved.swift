@@ -8,11 +8,13 @@
 import Foundation
 
 
-struct EventSaved {
+struct EventSaved: Equatable {
 
+    static func ==(lhs: EventSaved, rhs: EventSaved) -> Bool {
+        return lhs.title == rhs.title 
+    }
+    
     let title: String
     let subtitle: String
-    let imageURL: String 
-    let imageData: Data? = nil
 
 }

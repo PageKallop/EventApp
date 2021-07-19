@@ -20,22 +20,21 @@ class SelectedEventViewController: UIViewController {
     var eventData = [EventData]()
     
     var saveEvent : [EventSaved] = []
- 
+    
     let db = Firestore.firestore()
-
+    
     var url : URL?
-
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-   
+        
         view.backgroundColor = .systemBackground
         view.addSubview(likeLabel)
         view.addSubview(image)
         view.addSubview(eventLabel)
         view.addSubview(descLabel)
         view.addSubview(likeButton)
- 
+        
         buttonConstraint()
         imageConstraint()
         eventConstraint()
@@ -44,49 +43,38 @@ class SelectedEventViewController: UIViewController {
         
         let navBar = UINavigationBar(frame: CGRect(x: 0, y: 50, width: view.frame.size.width, height: 40))
         view.addSubview(navBar)
-
+        
         let navItem = UINavigationItem(title: "SomeTitle")
         let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(goBack))
         navItem.leftBarButtonItem = doneItem
-
+        
         navBar.setItems([navItem], animated: false)
         
         likeLabel.isHidden = true
         likeButton.addTarget(self, action: #selector(tapped), for: .touchUpInside)
         
-
-        
     }
     
     @objc func goBack(){
-        
-        cell.likeLabel.text = "❤️"
-        eventvc.tableView.reloadData()
-       
+    
         dismiss(animated: true, completion: nil)
-        
         
     }
     
     @objc func tapped() {
-    
+        
         print("The Button Has Been Pressed")
         save()
-        loadSavedData()
-  
-//        let newArray = self.eventvc.eventModels.filter { i in self.saveEvent.contains{ i.title == $0.title }
-//        let newArray = self.saveEvent.filter { i in self.eventvc.eventModels.contains{ i.title == $0.title }
-//        }
-
+   
     }
-
+    
     func save(){
-
+        
         likeLabel.isHidden = false
         
         likeLabel.text = "❤️"
         
-      
+        
         let storage = Storage.storage()
         
         let storageRef = storage.reference(forURL: "gs://eventapp-7ee0d.appspot.com")
@@ -115,6 +103,8 @@ class SelectedEventViewController: UIViewController {
                                 print("errir savinv data \(e)")
                             } else {
                                 print("data saved")
+                                
+                                
                             }
                         }
                     }
@@ -125,39 +115,10 @@ class SelectedEventViewController: UIViewController {
         
     }
     
-    func loadSavedData(){
-        
-        db.collection("Post").addSnapshotListener { snapshot, error in
 
-            self.saveEvent = []
-            
-            if let e = error {
-                print("Error retrieving data \(e)")
-            } else {
-
-                if let newDoc = snapshot?.documents {
-
-                    for doc in newDoc {
-
-                        let data = doc.data()
-                        if let descData = data["description"] as? String, let imageData = data["image"] as? String, let titleData = data["title"] as? String {
-                            let newSavePost = EventSaved(title: titleData, subtitle: descData, imageURL: imageData)
-                            
-
-                            self.saveEvent.append(newSavePost)
-              
-                        }
-
-                    }
-
-                }
-            }
-        }
-
-    }
     
     func eventConstraint(){
-     
+        
         eventLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60).isActive = true
         eventLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         eventLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100).isActive = true
@@ -174,7 +135,7 @@ class SelectedEventViewController: UIViewController {
     
     
     func imageConstraint(){
-     
+        
         image.topAnchor.constraint(equalTo: eventLabel.bottomAnchor, constant: 25).isActive = true
         image.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         image.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
@@ -191,7 +152,7 @@ class SelectedEventViewController: UIViewController {
     
     
     func descConstraint(){
-     
+        
         descLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 30).isActive = true
         descLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         descLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
@@ -210,7 +171,7 @@ class SelectedEventViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 0
-//        label.backgroundColor = .red
+        //        label.backgroundColor = .red
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -219,7 +180,6 @@ class SelectedEventViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 0
-//        label.backgroundColor = .green
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -234,14 +194,13 @@ class SelectedEventViewController: UIViewController {
         return image
     }()
     
-
+    
     let likeLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 0
-//        label.text = "❤️"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
 }

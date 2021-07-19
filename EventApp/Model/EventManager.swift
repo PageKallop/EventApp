@@ -13,6 +13,7 @@ final class EventManager {
     
     let urlConstant = URL(string: "https://api.seatgeek.com/2/performers?client_id=MjIzMzA2NDl8MTYyNDQ2MDY1NC4zMTk1Nzk0&q=")
     
+    
     let searchURL = "https://api.seatgeek.com/2/performers?client_id=MjIzMzA2NDl8MTYyNDQ2MDY1NC4zMTk1Nzk0&q="
     
     private init() {}

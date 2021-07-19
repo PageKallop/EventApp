@@ -19,8 +19,8 @@ class EventTableViewCell: UITableViewCell {
         addSubview(likeLabel)
 
         imageConstraint()
-        
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -90,8 +90,7 @@ class EventTableViewCell: UITableViewCell {
     let titleLabel : UILabel = {
        let title = UILabel()
         title.font = UIFont.boldSystemFont(ofSize: 20)
-        title.numberOfLines = 0 
-//        title.backgroundColor = .green
+        title.numberOfLines = 0
         title.translatesAutoresizingMaskIntoConstraints = false
         return title
     }()
@@ -100,7 +99,6 @@ class EventTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 0
-//        label.backgroundColor = .purple
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
