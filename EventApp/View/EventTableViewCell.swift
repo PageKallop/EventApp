@@ -17,7 +17,7 @@ class EventTableViewCell: UITableViewCell {
         stackConstraint()
         addSubview(image)
         addSubview(likeLabel)
-
+        likeLabel.isHidden = true 
         imageConstraint()
     }
     
@@ -57,7 +57,7 @@ class EventTableViewCell: UITableViewCell {
             .resume()
         }
     }
-    
+
     func stackConstraint(){
         
         stackView.addArrangedSubview(titleLabel)
@@ -86,6 +86,7 @@ class EventTableViewCell: UITableViewCell {
         image.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 250).isActive = true
         
     }
+    
     
     let titleLabel : UILabel = {
        let title = UILabel()
@@ -127,6 +128,7 @@ class EventTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 0
+        label.text = "❤️"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

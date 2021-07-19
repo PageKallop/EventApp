@@ -17,7 +17,7 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     var eventModels = [EventModel]()
     
-    var newSavePost = [EventSaved]()
+    var newSavePost : [EventSaved] = []
 
     let searchVC = UISearchController(searchResultsController: nil)
 
@@ -51,8 +51,9 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        getEvents()
+        
         tableView.reloadData()
-
     }
     
     
@@ -76,13 +77,13 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         
         db.collection("Post").addSnapshotListener { [self] snapshot, error in
-
+           
             self.newSavePost = []
-            
-            print("THIS IS THE NEW SAVED POST ARRAY THAT S")
+      
             if let e = error {
                 print("Error retrieving data \(e)")
             } else {
+               
                 
                 if let newDoc = snapshot?.documents {
                     
@@ -92,17 +93,9 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
                         if let descData = data["description"] as? String, let titleData = data["title"] as? String {
                        
                            let newPost = EventSaved(title: titleData, subtitle: descData)
-                       
-                            
-                            newSavePost.append(newPost)
-                            
-
-      
-                    print("this is the new array that was created \(newSavePost)")
  
-
-                                
-                            
+                            self.newSavePost.append(newPost)
+                            print("this is the new array that was created \(newSavePost)")
                             }
       
                         }
@@ -138,21 +131,26 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
+
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EventTableViewCell
+        
         cell.configureCell(with: eventModels[indexPath.row])
-
-       
+    
+        cell.likeLabel.isHidden = true 
         for titles in newSavePost {
-            
+
             if eventModels[indexPath.row].title == titles.title {
-                cell.likeLabel.text = "❤️"
+                print("These are the titles you are looking for \(titles.title)")
+                cell.likeLabel.isHidden = false
             } else {
-                print("Couldn't find a match!")
+            
+                    print("not this cell\(newSavePost)")
+                
             }
         }
-        
 
         return cell
     }
@@ -165,7 +163,6 @@ class EventViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        print("Selected")
         let event = eventModels[indexPath.row]
         let selectedVC = SelectedEventViewController()
         selectedVC.modalPresentationStyle = .fullScreen

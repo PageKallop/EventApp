@@ -19,8 +19,6 @@ class SelectedEventViewController: UIViewController {
     
     var eventData = [EventData]()
     
-    var saveEvent : [EventSaved] = []
-    
     let db = Firestore.firestore()
     
     var url : URL?
@@ -56,24 +54,20 @@ class SelectedEventViewController: UIViewController {
     }
     
     @objc func goBack(){
-    
+        
         dismiss(animated: true, completion: nil)
         
     }
     
     @objc func tapped() {
         
-        print("The Button Has Been Pressed")
         save()
-   
+        
     }
     
     func save(){
         
         likeLabel.isHidden = false
-        
-        likeLabel.text = "❤️"
-        
         
         let storage = Storage.storage()
         
@@ -115,7 +109,7 @@ class SelectedEventViewController: UIViewController {
         
     }
     
-
+    
     
     func eventConstraint(){
         
@@ -127,10 +121,10 @@ class SelectedEventViewController: UIViewController {
     
     func buttonConstraint(){
         
-        likeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60).isActive = true
+        likeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 75).isActive = true
         likeButton.leadingAnchor.constraint(equalTo: eventLabel.trailingAnchor, constant: 20).isActive = true
         likeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        likeButton.bottomAnchor.constraint(equalTo: image.topAnchor, constant: -20).isActive = true
+        likeButton.bottomAnchor.constraint(equalTo: image.topAnchor, constant: -50).isActive = true
     }
     
     
@@ -162,7 +156,9 @@ class SelectedEventViewController: UIViewController {
     let likeButton : UIButton = {
         let button = UIButton()
         button.setTitle("Like", for: .normal)
-        button.backgroundColor = .blue
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 15
+        button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -171,7 +167,6 @@ class SelectedEventViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.numberOfLines = 0
-        //        label.backgroundColor = .red
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -199,6 +194,7 @@ class SelectedEventViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.numberOfLines = 0
+        label.text = "❤️"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
